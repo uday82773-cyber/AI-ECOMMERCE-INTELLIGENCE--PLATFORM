@@ -49,4 +49,7 @@ This dashboard helps decision-makers monitor and optimize business performance.
 - Profit Margin %
 - Monthly Growth %
 
+## Dashboard Preview
+![Dashboard](Presantation/dashboard_preview.png)
+
 ---
