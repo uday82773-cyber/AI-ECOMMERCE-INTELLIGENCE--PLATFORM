@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 # ---------------------------------------------------
 # PAGE CONFIG
@@ -20,6 +21,31 @@ df = pd.read_csv(
     "data/raw/Superstore_sales.csv",
     encoding='latin1'
 )
+
+# ---------------------------------------------------
+# SIDEBAR FILTERS
+# ---------------------------------------------------
+
+st.sidebar.header("🔍 Filter Dashboard")
+
+region_filter = st.sidebar.multiselect(
+    "Select Region",
+    options=df["Region"].unique(),
+    default=df["Region"].unique()
+)
+
+category_filter = st.sidebar.multiselect(
+    "Select Category",
+    options=df["Category"].unique(),
+    default=df["Category"].unique()
+)
+
+# Apply Filters
+
+df = df[
+    (df["Region"].isin(region_filter)) &
+    (df["Category"].isin(category_filter))
+]
 
 # ---------------------------------------------------
 # TITLE
@@ -64,36 +90,55 @@ with col3:
 st.markdown("---")
 
 # ---------------------------------------------------
-# REGION WISE SALES
+# CHART SECTION
 # ---------------------------------------------------
 
-st.subheader("📍 Region Wise Sales")
+col_chart1, col_chart2 = st.columns(2)
 
-region_sales = df.groupby("Region")["Sales"].sum()
+# REGION SALES CHART
 
-st.bar_chart(region_sales)
+with col_chart1:
 
-# ---------------------------------------------------
-# CATEGORY CONTRIBUTION
-# ---------------------------------------------------
+    st.subheader("📍 Region Wise Sales")
 
-st.subheader("🛒 Category Contribution")
+    region_sales = df.groupby("Region")["Sales"].sum()
 
-category_sales = df.groupby("Category")["Sales"].sum()
+    fig = px.bar(
+        x=region_sales.index,
+        y=region_sales.values,
+        color=region_sales.index,
+        title="Region Wise Sales Analysis"
+    )
 
-fig, ax = plt.subplots(figsize=(5, 5))
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
 
-ax.pie(
-    category_sales,
-    labels=category_sales.index,
-    autopct='%1.1f%%'
-)
+# CATEGORY PIE CHART
 
-st.pyplot(fig)
+with col_chart2:
+
+    st.subheader("🛒 Category Contribution")
+
+    category_sales = df.groupby("Category")["Sales"].sum()
+
+    fig2 = px.pie(
+        values=category_sales.values,
+        names=category_sales.index,
+        title="Category Contribution"
+    )
+
+    st.plotly_chart(
+        fig2,
+        use_container_width=True
+    )
 
 # ---------------------------------------------------
 # MONTHLY SALES TREND
 # ---------------------------------------------------
+
+st.markdown("---")
 
 st.subheader("📈 Monthly Sales Trend")
 
@@ -103,22 +148,22 @@ monthly_sales = df.groupby(
     df["Order_Date"].dt.month
 )["Sales"].sum()
 
-fig2, ax2 = plt.subplots(figsize=(10, 4))
+fig3, ax3 = plt.subplots(figsize=(12, 4))
 
-ax2.plot(
+ax3.plot(
     monthly_sales.index,
     monthly_sales.values,
     marker='o'
 )
 
-ax2.set_xlabel("Month")
-ax2.set_ylabel("Sales")
-ax2.set_title("Monthly Sales Trend")
+ax3.set_xlabel("Month")
+ax3.set_ylabel("Sales")
+ax3.set_title("Monthly Sales Trend")
 
-st.pyplot(fig2)
+st.pyplot(fig3)
 
 # ---------------------------------------------------
-# AI SALES PREDICTION SECTION
+# AI SALES PREDICTION
 # ---------------------------------------------------
 
 st.markdown("---")
@@ -148,7 +193,7 @@ st.success(
 )
 
 # ---------------------------------------------------
-# DATA PREVIEW
+# DATASET PREVIEW
 # ---------------------------------------------------
 
 st.markdown("---")
