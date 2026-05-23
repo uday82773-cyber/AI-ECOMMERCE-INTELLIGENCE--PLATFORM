@@ -138,7 +138,7 @@ Dashboard deployed using Streamlit Cloud.
 
 # 👨‍💻 Author
 
-Uday Prajapati
+Uday Verma
 
 Aspiring Data Analyst | Data Scientist | AI Developer
 
