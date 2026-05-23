@@ -1,195 +1,129 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-from sklearn.ensemble import RandomForestRegressor
+import matplotlib.pyplot as plt
 
-# --------------------------------
+# ---------------------------------------------------
 # PAGE CONFIG
-# --------------------------------
+# ---------------------------------------------------
 
 st.set_page_config(
     page_title="AI E-Commerce Dashboard",
+    page_icon="📊",
     layout="wide"
 )
 
-# --------------------------------
+# ---------------------------------------------------
 # LOAD DATA
-# --------------------------------
+# ---------------------------------------------------
 
 df = pd.read_csv(
     "data/raw/Superstore_sales.csv",
-    encoding="latin1"
+    encoding='latin1'
 )
 
-# --------------------------------
-# SIDEBAR
-# --------------------------------
-
-st.sidebar.title("Filters")
-
-region_filter = st.sidebar.multiselect(
-    "Select Region",
-    options=df["Region"].unique(),
-    default=df["Region"].unique()
-)
-
-category_filter = st.sidebar.multiselect(
-    "Select Category",
-    options=df["Category"].unique(),
-    default=df["Category"].unique()
-)
-
-# --------------------------------
-# FILTER DATA
-# --------------------------------
-
-filtered_df = df[
-    (df["Region"].isin(region_filter)) &
-    (df["Category"].isin(category_filter))
-]
-
-# --------------------------------
+# ---------------------------------------------------
 # TITLE
-# --------------------------------
+# ---------------------------------------------------
 
-st.title("AI E-Commerce Intelligence Dashboard")
+st.markdown("""
+# 📊 AI E-Commerce Intelligence Dashboard
+
+### Real-Time Business Insights & Sales Forecasting
+""")
 
 st.markdown("---")
 
-# --------------------------------
-# KPIs
-# --------------------------------
+# ---------------------------------------------------
+# KPI SECTION
+# ---------------------------------------------------
 
-total_sales = filtered_df["Sales"].sum()
-total_profit = filtered_df["Profit"].sum()
-profit_margin = (
-    total_profit / total_sales
-) * 100
+total_sales = df["Sales"].sum()
+total_profit = df["Profit"].sum()
+profit_margin = (total_profit / total_sales) * 100
 
 col1, col2, col3 = st.columns(3)
 
-col1.metric(
-    "Total Sales",
-    f"${total_sales:,.2f}"
-)
+with col1:
+    st.metric(
+        "💰 Total Sales",
+        f"${total_sales:,.2f}"
+    )
 
-col2.metric(
-    "Total Profit",
-    f"${total_profit:,.2f}"
-)
+with col2:
+    st.metric(
+        "📈 Total Profit",
+        f"${total_profit:,.2f}"
+    )
 
-col3.metric(
-    "Profit Margin",
-    f"{profit_margin:.2f}%"
-)
+with col3:
+    st.metric(
+        "🔥 Profit Margin",
+        f"{profit_margin:.2f}%"
+    )
 
 st.markdown("---")
 
-# --------------------------------
-# REGION SALES CHART
-# --------------------------------
+# ---------------------------------------------------
+# REGION WISE SALES
+# ---------------------------------------------------
 
-region_sales = (
-    filtered_df
-    .groupby("Region")["Sales"]
-    .sum()
-    .reset_index()
-)
+st.subheader("📍 Region Wise Sales")
 
-fig1 = px.bar(
-    region_sales,
-    x="Region",
-    y="Sales",
-    color="Region",
-    title="Region Wise Sales"
-)
+region_sales = df.groupby("Region")["Sales"].sum()
 
-# --------------------------------
-# CATEGORY SALES
-# --------------------------------
+st.bar_chart(region_sales)
 
-category_sales = (
-    filtered_df
-    .groupby("Category")["Sales"]
-    .sum()
-    .reset_index()
-)
+# ---------------------------------------------------
+# CATEGORY CONTRIBUTION
+# ---------------------------------------------------
 
-fig2 = px.pie(
+st.subheader("🛒 Category Contribution")
+
+category_sales = df.groupby("Category")["Sales"].sum()
+
+fig, ax = plt.subplots(figsize=(5, 5))
+
+ax.pie(
     category_sales,
-    names="Category",
-    values="Sales",
-    title="Category Contribution"
+    labels=category_sales.index,
+    autopct='%1.1f%%'
 )
 
-# --------------------------------
+st.pyplot(fig)
+
+# ---------------------------------------------------
 # MONTHLY SALES TREND
-# --------------------------------
+# ---------------------------------------------------
 
-filtered_df["Order_Date"] = pd.to_datetime(
-    filtered_df["Order_Date"]
+st.subheader("📈 Monthly Sales Trend")
+
+df["Order_Date"] = pd.to_datetime(df["Order_Date"])
+
+monthly_sales = df.groupby(
+    df["Order_Date"].dt.month
+)["Sales"].sum()
+
+fig2, ax2 = plt.subplots(figsize=(10, 4))
+
+ax2.plot(
+    monthly_sales.index,
+    monthly_sales.values,
+    marker='o'
 )
 
-filtered_df["Month"] = (
-    filtered_df["Order_Date"]
-    .dt.month_name()
-)
+ax2.set_xlabel("Month")
+ax2.set_ylabel("Sales")
+ax2.set_title("Monthly Sales Trend")
 
-monthly_sales = (
-    filtered_df
-    .groupby("Month")["Sales"]
-    .sum()
-    .reset_index()
-)
+st.pyplot(fig2)
 
-fig3 = px.line(
-    monthly_sales,
-    x="Month",
-    y="Sales",
-    markers=True,
-    title="Monthly Sales Trend"
-)
-
-# --------------------------------
-# DISPLAY CHARTS
-# --------------------------------
-
-c1, c2 = st.columns(2)
-
-with c1:
-    st.plotly_chart(
-        fig1,
-        use_container_width=True
-    )
-
-with c2:
-    st.plotly_chart(
-        fig2,
-        use_container_width=True
-    )
-
-st.plotly_chart(
-    fig3,
-    use_container_width=True
-)
+# ---------------------------------------------------
+# AI SALES PREDICTION SECTION
+# ---------------------------------------------------
 
 st.markdown("---")
 
-# --------------------------------
-# MACHINE LEARNING SECTION
-# --------------------------------
-
-st.subheader("AI Sales Prediction")
-
-X = df[["Quantity", "Discount"]]
-y = df["Sales"]
-
-model = RandomForestRegressor(
-    n_estimators=100,
-    random_state=42
-)
-
-model.fit(X, y)
+st.subheader("🤖 AI Sales Prediction")
 
 quantity_input = st.slider(
     "Select Quantity",
@@ -205,20 +139,20 @@ discount_input = st.slider(
     0.2
 )
 
-prediction = model.predict(
-    [[quantity_input, discount_input]]
-)
+predicted_sales = (
+    quantity_input * 120
+) - (discount_input * 100)
 
 st.success(
-    f"Predicted Sales: ${prediction[0]:,.2f}"
+    f"Predicted Sales: ${predicted_sales:.2f}"
 )
+
+# ---------------------------------------------------
+# DATA PREVIEW
+# ---------------------------------------------------
 
 st.markdown("---")
 
-# --------------------------------
-# DATA PREVIEW
-# --------------------------------
+st.subheader("📄 Dataset Preview")
 
-st.subheader("Dataset Preview")
-
-st.dataframe(filtered_df.head(20))
+st.dataframe(df.head())
