@@ -120,6 +120,7 @@ AI-ECOMMERCE-INTELLIGENCE-PLATFORM/
 # 🌐 Deployment
 
 Dashboard deployed using Streamlit Cloud.
+https://ai-ecommerce-intelligence--platform-fe7ph9ljdpfe2xzhywdfnz.streamlit.app/
 
 ---
 
@@ -140,7 +141,7 @@ Dashboard deployed using Streamlit Cloud.
 
 Uday Verma
 
-Aspiring Data Analyst | Data Scientist | AI Developer
+Data Analyst | Data Scientist | AI Developer
 
 ---
 
