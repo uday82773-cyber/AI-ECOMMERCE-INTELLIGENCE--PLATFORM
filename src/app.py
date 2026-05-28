@@ -16,6 +16,8 @@ st.set_page_config(
     layout="wide"
 )
 
+
+
 # ---------------------------------------------------
 # LOAD DATA
 # ---------------------------------------------------
@@ -315,6 +317,8 @@ ax5.set_xlabel("Month")
 ax5.set_ylabel("Sales")
 
 st.pyplot(fig5)
+
+
 
 st.markdown("---")
 

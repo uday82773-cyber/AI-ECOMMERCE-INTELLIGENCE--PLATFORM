@@ -1,4 +1,30 @@
-# 🚀 AI E-Commerce Intelligence Dashboard
+# 🚀 AI E-Commerce Intelligence Dashboar
+
+![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python)
+
+![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-red?style=for-the-badge&logo=streamlit)
+
+![Machine Learning](https://img.shields.io/badge/Machine-Learning-green?style=for-the-badge)
+
+![SQL](https://img.shields.io/badge/SQL-Analytics-orange?style=for-the-badge)
+
+![Power BI](https://img.shields.io/badge/PowerBI-Visualization-yellow?style=for-the-badge)
+
+---
+
+## 📊 Project Overview
+
+An advanced AI-powered E-Commerce Analytics Dashboard built using Python, Streamlit, SQL, Plotly, and Machine Learning.
+
+This project provides:
+- Real-time business insights
+- Sales forecasting
+- KPI tracking
+- Interactive dashboards
+- Machine Learning predictions
+- Business intelligence analytics
+
+---
 
 An advanced AI-powered E-Commerce Analytics Dashboard built using Python, Streamlit, Machine Learning, Pandas, Plotly, and Scikit-Learn.
 
