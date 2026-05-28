@@ -318,10 +318,11 @@ ax5.set_ylabel("Sales")
 
 st.pyplot(fig5)
 
-
-
 st.markdown("---")
 
 st.subheader("📄 Dataset Preview")
 
 st.dataframe(df.head())
+
+st.markdown("---")
+st.caption("🚀 Built by Uday Verma | AI E-Commerce Intelligence Dashboard")
