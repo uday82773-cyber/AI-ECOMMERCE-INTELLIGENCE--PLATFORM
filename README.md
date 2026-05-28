@@ -149,25 +149,29 @@ Dashboard deployed using Streamlit Cloud.
 https://ai-ecommerce-intelligence--platform-fe7ph9ljdpfe2xzhywdfnz.streamlit.app/
 
 ---
+# 🚀 Future Improvements
 
-# 🎯 Future Improvements
-
-- XGBoost Integration
+- Deep Learning Forecasting
+- Real-Time API Integration
 - Customer Segmentation
-- Recommendation System
-- Time Series Forecasting
-- SQL Database Integration
-- Authentication System
-- Docker Deployment
-- Power BI Dashboard Version
+- AI Recommendation System
+- Cloud Deployment
+- Advanced KPI Monitoring
 
 ---
-
 # 👨‍💻 Author
 
-Uday Verma
+## Uday Verma
 
-Data Analyst | Data Scientist | AI Developer
+- 📍 Agra, Uttar Pradesh
+- 🎓 Bachelor of Science — FS University
+- 💡 Data Analytics | Machine Learning | SQL | Python
+
+### 🔗 Connect With Me
+
+- LinkedIn: https://www.linkedin.com/in/uday-verma-70a0a6411
+- GitHub: https://github.com/uday82773-cyber
+
 
 ---
 
