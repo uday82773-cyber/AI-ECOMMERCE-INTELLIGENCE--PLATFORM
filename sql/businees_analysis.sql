@@ -71,8 +71,38 @@ SELECT
 AVG[Shipping_days] as Avg_shipping_days
 from Superstore_sales
 
+--- Totals sales by Region 
+Select region ,
+sum(sales) as total_sales from superstore_sales
+group by region
+order by total_sales desc;
+
+----category wise profit 
+select categoty,
+sum(profit) as total_profit from superstore_sales
+group by category 
+order by total_profit desc ;
+
+--- Top 10 customers 
+select [customer name],
+sum(sales) as customer_sales
+from superstore_sales
+group by [customer name]
+order by customer_sales desc
+limit 10;
 
 
+--- Monthly sales trend 
+select 
+    year[Order Date] as Order_year ,
+    MOnth[Order Date] as Order_month,
+    sum(sales) as Monthly_sales
+        from superstore_sales
+    group by ([order Date],
+    Month[Order Month])
+    group by 
+    order_year ,
+    order_month;
 
 
 

@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
+from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.model_selection import train_test_split
+
 
 # ---------------------------------------------------
 # PAGE CONFIG
@@ -184,17 +187,134 @@ discount_input = st.slider(
     0.2
 )
 
-predicted_sales = (
-    quantity_input * 120
-) - (discount_input * 100)
+from sklearn.ensemble import RandomForestRegressor
+
+# Train Model
+
+X = df[['Quantity', 'Discount']]
+y = df['Sales']
+
+rf_model = RandomForestRegressor(
+    n_estimators=100,
+    random_state=42
+)
+
+rf_model.fit(X, y)
+
+# Prediction
+
+prediction = rf_model.predict(
+    [[quantity_input, discount_input]]
+)
 
 st.success(
-    f"Predicted Sales: ${predicted_sales:.2f}"
+    f"Predicted Sales: ${prediction[0]:,.2f}"
 )
+
+# Train Test Split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42
+)
+
+# Random Forest Model
+
+rf_model = RandomForestRegressor(
+    n_estimators=100,
+    random_state=42
+)
+
+rf_model.fit(X_train, y_train)
+
+# Predictions
+
+rf_predictions = rf_model.predict(X_test)
+
+# Metrics
+
+rf_mae = mean_absolute_error(
+    y_test,
+    rf_predictions
+)
+
+
+st.markdown("---")
+
+st.subheader("📊 Model Performance")
+
+st.write(f"MAE Score: {rf_mae:.2f}")
+
+r2 = r2_score(y_test, rf_predictions)
+
+st.write(f"R2 Score: {r2:.2f}")
+
+
+
+st.markdown("---")
+
+st.subheader("📈 Feature Importance Analysis")
+
+feature_importance = pd.DataFrame({
+    "Feature": X.columns,
+    "Importance": rf_model.feature_importances_
+})
+
+feature_importance = feature_importance.sort_values(
+    by="Importance",
+    ascending=False
+)
+
+fig4, ax4 = plt.subplots(figsize=(8,4))
+
+ax4.bar(
+    feature_importance["Feature"],
+    feature_importance["Importance"]
+)
+
+ax4.set_title("Feature Importance")
+ax4.set_xlabel("Features")
+ax4.set_ylabel("Importance Score")
+
+st.pyplot(fig4)
+
+st.download_button(
+    label="📥 Download Dataset",
+    data=df.to_csv(index=False),
+    file_name="superstore_sales.csv",
+    mime="text/csv"
+)
+
 
 # ---------------------------------------------------
 # DATASET PREVIEW
 # ---------------------------------------------------
+
+st.markdown("---")
+
+st.subheader("📈 Sales Forecast Trend")
+
+df["Order_Date"] = pd.to_datetime(df["Order_Date"])
+
+df["Month"] = df["Order_Date"].dt.month
+
+forecast_data = df.groupby("Month")["Sales"].sum().reset_index()
+
+fig5, ax5 = plt.subplots(figsize=(10,4))
+
+ax5.plot(
+    forecast_data["Month"],
+    forecast_data["Sales"],
+    marker="o"
+)
+
+ax5.set_title("Monthly Forecast Trend")
+ax5.set_xlabel("Month")
+ax5.set_ylabel("Sales")
+
+st.pyplot(fig5)
 
 st.markdown("---")
 
